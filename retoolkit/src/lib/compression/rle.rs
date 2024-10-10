@@ -4,10 +4,10 @@ pub fn compress(source: &[u8]) -> Vec<u8> {
     let mut current_byte: u8 = 0u8;
 
     if source.is_empty() == false {
-        current_byte = data[0];
+        current_byte = source[0];
         count = 1u8;
 
-        for &byte in &data[1..] {
+        for &byte in &source[1..] {
             if byte == current_byte && count < 255 {
                 count += 1u8;
             } else {
@@ -26,14 +26,14 @@ pub fn compress(source: &[u8]) -> Vec<u8> {
 }
 
 pub fn decompress(source: &[u8]) -> Vec<u8> {
-    let mut i: u8 = 0u8;
+    let mut i: usize = 0;
     let mut byte: u8 = 0u8;
     let mut count: u8 = 0u8;
     let mut decompressed: Vec<u8> = Vec::new();    
 
-    while i < compressed.len() {
-        byte = compresses[i];
-        count = compressed[i + 1];
+    while i < source.len() {
+        byte = source[i];
+        count = source[i + 1];
         for _ in 0..count {
             decompressed.push(byte);
         }
