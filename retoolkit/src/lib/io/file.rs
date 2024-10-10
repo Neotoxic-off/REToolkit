@@ -1,6 +1,8 @@
-use std::fs;
 use std::io::prelude::*;
-use std::path::{PathBuf, Path};
+use std::path::{Path};
+use std::collections::HashMap;
+use serde::{Serialize, de::DeserializeOwned};
+use serde_json;
 
 pub struct File;
 
@@ -28,5 +30,22 @@ impl File {
         file.read_to_string(&mut contents)?;
     
         Ok(())
+    }
+
+    pub fn write_json<T>(path: String, content: &T) -> Result<(), Box<dyn std::error::Error>> where T: Serialize,
+    {
+        let json_data = serde_json::to_string_pretty(&content)?;
+        File::write(path, json_data.as_bytes())?;
+        Ok(())
+    }
+
+    pub fn open_json<T>(path: String) -> Result<T, Box<dyn std::error::Error>> where T: DeserializeOwned,
+    {
+        let mut file = std::fs::File::open(&path)?;
+        let mut json_data = String::new();
+        file.read_to_string(&mut json_data)?;
+
+        let content: T = serde_json::from_str(&json_data)?;
+        Ok(content)
     }
 }

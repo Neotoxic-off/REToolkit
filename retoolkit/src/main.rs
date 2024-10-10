@@ -7,6 +7,7 @@ mod core;
 
 pub mod structs;
 pub mod lib;
+pub mod constants;
 
 fn setup() -> () {
     env_logger::Builder::from_env(env_logger::Env::default().default_filter_or("trace")).init();

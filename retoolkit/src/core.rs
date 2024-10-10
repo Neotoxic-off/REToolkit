@@ -1,11 +1,10 @@
 use std::collections::HashMap;
-use std::hash::Hash;
-use std::ops::Deref;
 
-use log::{info, error, warn};
+use log::{info, error};
 
 use crate::lib;
 use crate::structs;
+use crate::constants;
 
 pub fn load(arguments: &structs::Arguments) -> () {
     if is_valid_directory(&arguments.directory) == true {
@@ -13,13 +12,9 @@ pub fn load(arguments: &structs::Arguments) -> () {
     }
 }
 
-fn detect_asset(file_name: String, _file_path: String) -> structs::AssetKind {
-    let extensions: HashMap<&str, structs::AssetKind> = HashMap::from([
-        (".png", structs::AssetKind::Image)
-    ]);
-
-    for (extension, asset_kind) in &extensions {
-        if file_name.ends_with(extension) {
+fn detect_asset(file_name: &String) -> structs::AssetKind {
+    for (extension, asset_kind) in constants::EXTENSIONS.iter() {
+        if file_name.to_lowercase().ends_with(extension) {
             return asset_kind.clone();
         }
     }
@@ -31,8 +26,15 @@ fn index_assets(directory: &String) -> Vec<structs::Asset> {
     let content: HashMap<String, String> = lib::io::Directory::get_directory(directory, true);
     let mut assets: Vec<structs::Asset> = Vec::new();
 
-    for element in content.iter() {
+    for (name, path) in content.iter() {
+        let item: structs::Asset = structs::Asset {
+            path: path.to_string(),
+            kind: detect_asset(name),
+        };
 
+        assets.push(item.clone());
+
+        info!("AssetKind: ({:?}) {}", &item.kind, name);
     }
 
     assets
