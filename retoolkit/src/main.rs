@@ -1,11 +1,11 @@
 use env_logger;
 
-use std::env;
-use log::{info, error, warn};
+use clap::Parser;
+use std::{env};
 
 mod core;
-mod arguments;
 
+pub mod structs;
 pub mod lib;
 
 fn setup() -> () {
@@ -13,12 +13,8 @@ fn setup() -> () {
 }
 
 fn main() {
-    let mut arguments_manager: arguments::Arguments = arguments::Arguments::new(
-        env::args().skip(1).collect(),
-        vec!["--directory"]
-    );
+    let arguments: structs::Arguments = structs::Arguments::parse();
 
     setup();
-
-    arguments_manager.load();
+    core::load(&arguments);
 }

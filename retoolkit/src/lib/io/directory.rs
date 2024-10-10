@@ -1,10 +1,18 @@
 use std::fs;
-use std::path::PathBuf;
+use std::path::{PathBuf, Path};
 use std::collections::HashMap;
 
 pub struct Directory;
 
 impl Directory {
+    pub fn exists(path: &String) -> bool {
+        Path::new(path).exists()
+    }
+
+    pub fn is_directory(path: &String) -> bool {
+        Directory::exists(path) && Path::new(path).is_dir()
+    }
+
     pub fn get_directory(directory: &String, deep: bool) -> HashMap<String, String> {
         let mut content: HashMap<String, String> = HashMap::new();
         let entries = fs::read_dir(directory).unwrap();
