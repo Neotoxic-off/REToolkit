@@ -12,6 +12,10 @@ pub fn load(arguments: &structs::Arguments) -> () {
     }
 }
 
+fn compress() -> () {
+    
+}
+
 fn detect_asset(file_name: &String) -> structs::AssetKind {
     for (extension, asset_kind) in constants::EXTENSIONS.iter() {
         if file_name.to_lowercase().ends_with(extension) {

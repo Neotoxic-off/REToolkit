@@ -3,7 +3,8 @@ use once_cell::sync::Lazy;
 
 use crate::structs;
 
-pub static EXTENSIONS: Lazy<HashMap<&'static str, structs::AssetKind>> = Lazy::new(|| {
+
+pub static EXTENSIONS: Lazy<HashMap<&str, structs::AssetKind>> = Lazy::new(|| {
     HashMap::from([
         (".o", structs::AssetKind::Object),
         (".png", structs::AssetKind::Image),
