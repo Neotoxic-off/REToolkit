@@ -1,6 +1,7 @@
 use std::io::prelude::*;
 use std::path::{Path};
 use std::collections::HashMap;
+use std::error::Error;
 use serde::{Serialize, de::DeserializeOwned};
 use serde_json;
 
@@ -15,33 +16,31 @@ impl File {
         File::exists(path) && Path::new(path).is_file()
     }
 
-    pub fn write(path: String, content: &[u8]) -> std::io::Result<()> {
-        let mut file = std::fs::File::create(&path)?;
+    pub fn write(path: &str, content: &[u8]) -> std::io::Result<()> {
+        let mut file = std::fs::File::create(path)?;
     
         file.write_all(content)?;
     
         Ok(())
     }
     
-    pub fn open(path: String) -> std::io::Result<()> {
-        let mut file = std::fs::File::open(&path)?;
-        let mut contents = String::new();
+    pub fn open(path: &str) -> std::io::Result<Vec<u8>> {
+        let mut file: std::fs::File = std::fs::File::open(path)?;
+        let mut contents: Vec<u8> = Vec::new();
+
+        file.read_to_end(&mut contents)?;
     
-        file.read_to_string(&mut contents)?;
-    
-        Ok(())
+        Ok(contents)
     }
 
-    pub fn write_json<T>(path: String, content: &T) -> Result<(), Box<dyn std::error::Error>> where T: Serialize,
-    {
+    pub fn write_json<T>(path: &str, content: &T) -> Result<(), Box<dyn std::error::Error>> where T: Serialize, {
         let json_data = serde_json::to_string_pretty(&content)?;
         File::write(path, json_data.as_bytes())?;
         Ok(())
     }
 
-    pub fn open_json<T>(path: String) -> Result<T, Box<dyn std::error::Error>> where T: DeserializeOwned,
-    {
-        let mut file = std::fs::File::open(&path)?;
+    pub fn open_json<T>(path: &str) -> Result<T, Box<dyn std::error::Error>> where T: DeserializeOwned, {
+        let mut file = std::fs::File::open(path)?;
         let mut json_data = String::new();
         file.read_to_string(&mut json_data)?;
 

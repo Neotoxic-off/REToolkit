@@ -4,12 +4,12 @@ mod png;
 pub struct Rle;
 
 impl Rle {
-    pub fn compress(source: &[u8]) -> Vec<u8> {
-        rle::compress(source)
+    pub fn compress(input_file: &str, output_file: &str) -> std::io::Result<()> {
+        rle::compress(input_file, output_file)
     }
     
-    pub fn decompress(source: &[u8]) -> Vec<u8> {
-        rle::decompress(source)
+    pub fn decompress(input_file: &str, output_file: &str) -> std::io::Result<()> {
+        rle::decompress(input_file, output_file)
     }
 }
 

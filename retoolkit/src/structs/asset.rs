@@ -1,6 +1,7 @@
 use std::collections::HashMap;
+use crate::constants;
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 pub enum AssetKind {
     Image,
     Video,
@@ -16,5 +17,7 @@ pub enum AssetKind {
 #[derive(Clone, Debug)]
 pub struct Asset {
     pub kind: AssetKind,
-    pub path: String
+    pub name: String,
+    pub path: String,
+    pub module: constants::CompressionFunction
 }
