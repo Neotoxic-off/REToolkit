@@ -3,11 +3,13 @@ use once_cell::sync::Lazy;
 
 use crate::{lib, structs};
 
+pub static COMPRESSION_EXTENSION: &str = ".rtc";
+
 pub type CompressionFunction = fn(&str, &str) -> std::io::Result<()>;
 
 pub static EXTENSIONS_MODULE: Lazy<HashMap<&'static str, CompressionFunction>> = Lazy::new(|| {
     HashMap::from([
-        (".o", lib::compression::Rle::compress as CompressionFunction),
+        (".o", lib::compression::Lz77::compress as CompressionFunction),
         (".png", lib::compression::Image::png),
         (".jpg", lib::compression::Rle::compress),
         (".jpeg", lib::compression::Rle::compress),
@@ -16,14 +18,11 @@ pub static EXTENSIONS_MODULE: Lazy<HashMap<&'static str, CompressionFunction>> =
         (".mkv", lib::compression::Rle::compress),
         (".mp4", lib::compression::Rle::compress),
         (".avi", lib::compression::Rle::compress),
-        (".zip", lib::compression::Rle::compress),
-        (".rar", lib::compression::Rle::compress),
-        (".7z", lib::compression::Rle::compress),
-        (".dll", lib::compression::Rle::compress),
-        (".exe", lib::compression::Rle::compress),
-        (".so", lib::compression::Rle::compress),
-        (".lib", lib::compression::Rle::compress),
-        (".bin", lib::compression::Rle::compress),
+        (".dll", lib::compression::Lz77::compress),
+        (".exe", lib::compression::Lz77::compress),
+        (".so", lib::compression::Lz77::compress),
+        (".lib", lib::compression::Lz77::compress),
+        (".bin", lib::compression::Lz77::compress),
         (".bat", lib::compression::Rle::compress),
         (".vbs", lib::compression::Rle::compress),
         (".sh", lib::compression::Rle::compress),
@@ -44,9 +43,6 @@ pub static EXTENSIONS_KIND: Lazy<HashMap<&'static str, structs::AssetKind>> = La
         (".mkv", structs::AssetKind::Video),
         (".mp4", structs::AssetKind::Video),
         (".avi", structs::AssetKind::Video),
-        (".zip", structs::AssetKind::Archive),
-        (".rar", structs::AssetKind::Archive),
-        (".7z", structs::AssetKind::Archive),
         (".dll", structs::AssetKind::Binary),
         (".exe", structs::AssetKind::Binary),
         (".so", structs::AssetKind::Binary),

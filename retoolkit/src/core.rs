@@ -24,8 +24,8 @@ fn compress_assets(assets: Vec<structs::Asset>) -> std::io::Result<()> {
 
     for asset in assets.iter() {
         input = asset.path.clone();
-        output = format!("{}.rcp", asset.path);
-        warn!("[{:?}] compressing: {}", asset.kind, input);
+        output = format!("{}{}", asset.path, constants::COMPRESSION_EXTENSION);
+        warn!("[{:?}] compressing: {}", asset.kind, asset.name);
         (asset.module)(&input, &output)?
     }
 
@@ -39,7 +39,7 @@ fn detect_module(file_name: &String) -> constants::CompressionFunction {
         }
     }
 
-    lib::compression::Rle::compress
+    lib::compression::dummy_compress
 }
 
 fn detect_kind(file_name: &String) -> structs::AssetKind {
